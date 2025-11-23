@@ -1,23 +1,31 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { createEmployee } from "../service/EmployeeService";
+import { type EmployeeDto } from "../service/types/EmployeeDto";
+import { useNavigate } from "react-router-dom";
 
 function CreateEmployeePage() {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
-  const saveEmployee = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(firstName, lastName, email);
-    setEmail("");
-    setFirstName("");
-    setLastName("");
+  const navigate = useNavigate();
+
+  const saveEmployee = () => {
+    const newEmployee: EmployeeDto = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+    };
+    createEmployee(newEmployee);
+
+    navigate("/employees");
   };
 
   return (
     <>
       <div className="container">
-        <br/>
-        <br/>
+        <br />
+        <br />
         <div className="row">
           <div className="card col-md-6 offset-md-3">
             <h2 className="text-center">Add Employee</h2>

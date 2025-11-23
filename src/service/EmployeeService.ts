@@ -10,3 +10,10 @@ export const fetchAllEmployeesData = async (): Promise<EmployeeDto[]> => {
     const response = await axios.get(allEmployeesApiEndpoint)
     return response.data;
 }
+
+export const createEmployee = async (employeeDto: EmployeeDto): Promise<void> => {
+    const createEmployeeApiEndpoint = baseApiUrl + "employees";
+
+    const response = await axios.post(createEmployeeApiEndpoint, employeeDto);
+    return response.data;
+}
