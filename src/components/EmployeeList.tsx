@@ -1,24 +1,19 @@
+import { fetchAllEmployeesData } from "../service/EmployeeService";
+
+import { useState, useEffect } from "react";
+import type { EmployeeDto } from "../service/types/EmployeeDto";
+
 function EmployeeList() {
-  const dummyData = [
-    {
-      id: 1,
-      firstName: "first",
-      lastName: "last",
-      email: "mail.com",
-    },
-    {
-      id: 2,
-      firstName: "test2",
-      lastName: "TEST2",
-      email: "MAIL",
-    },
-    {
-      id: 3,
-      firstName: "No.3",
-      lastName: "NO.3",
-      email: "EMAIL.com",
-    },
-  ];
+  const [employeesData, setEmployeesData] = useState<EmployeeDto[]>([]);
+
+  useEffect(() => {
+    fetchAllEmployeesData().then((data) => {
+      setEmployeesData(data);
+    });
+  }, []);
+
+  console.log(employeesData);
+
   return (
     <div className="container">
       <h2 className="text-center">List of Employees</h2>
@@ -32,9 +27,9 @@ function EmployeeList() {
           </tr>
         </thead>
         <tbody>
-          {dummyData.map((data) => {
+          {employeesData.map((data) => {
             return (
-              <tr>
+              <tr key={data.id}>
                 <td>{data.id}</td>
                 <td>{data.firstName}</td>
                 <td>{data.lastName}</td>
