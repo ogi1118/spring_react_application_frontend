@@ -3,11 +3,12 @@ import { FormInput } from "../components/FormInput";
 import useFormValidation from "../hooks/useFormValidation";
 import { useNavigate } from "react-router-dom";
 import type { LoginDto } from "../service/types/LoginDto";
-import { login } from "../service/AuthService";
+import { login, storeToken } from "../service/AuthService";
 
 export const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loginError, setLoginError] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -26,8 +27,13 @@ export const Login = () => {
       password: password,
     };
 
-    await login(loginDto);
-    navigate("/");
+    try {
+      await login(loginDto);
+      storeToken(email, password);
+      navigate("/");
+    } catch (err: any) {
+      setLoginError(err.message ?? "something is wrong");
+    }
   };
 
   return (
@@ -70,6 +76,7 @@ export const Login = () => {
                   </button>
                 </div>
               </form>
+              {loginError && <div>{loginError}</div>}
             </div>
           </div>
         </div>

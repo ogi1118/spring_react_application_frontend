@@ -1,7 +1,7 @@
 import axios from "axios";
 import { type EmployeeDto } from "./types/EmployeeDto";
 
-const baseApiUrl = import.meta.env.VITE_REST_API_BASE_URL + "/emplyees";
+const baseApiUrl = import.meta.env.VITE_REST_API_BASE_URL + "/employees";
 
 // API側でCORS設定をすること
 export const fetchAllEmployeesData = async (): Promise<EmployeeDto[]> => {

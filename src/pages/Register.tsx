@@ -37,22 +37,8 @@ export const Register = () => {
       setName("");
       setEmail("");
       setPassword("");
-    } catch (error: unknown) {
-      console.error(error);
-      let serverMessage = "Registration failed";
-      if (typeof error === "string") {
-        serverMessage = error;
-      } else if (typeof error === "object" && error !== null) {
-        const errObj = error as {
-          response?: { data?: { message?: string } };
-          message?: string;
-        };
-        serverMessage =
-          errObj.response?.data?.message ?? errObj.message ?? serverMessage;
-      }
-      setError(serverMessage);
-    } finally {
-      setLoading(false);
+    } catch (error: any) {
+      setError(error.message ?? "something is wrong");
     }
   };
 
