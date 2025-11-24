@@ -2,61 +2,45 @@ import { useState } from "react";
 import { createEmployee } from "../service/EmployeeService";
 import { type EmployeeDto } from "../service/types/EmployeeDto";
 import { useNavigate } from "react-router-dom";
+import FormInput from "../components/FormInput";
+import useFormValidation from "../hooks/useFormValidation";
 
 function CreateEmployeePage() {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
 
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+  // useFormValidation フックを使ってエラー管理を共通化
+  // 引数にはフィールド名 -> 表示ラベル のマップを渡すと、メッセージにラベルが使われます
+  const { errors, validate } = useFormValidation({
+    firstName: "First name",
+    lastName: "Last name",
+    email: "Email",
   });
 
   const navigate = useNavigate();
 
-  const validateForm = () => {
-    let valid = true;
-
-    const errorsCopy = { ...errors };
-
-    if (firstName.trim()) {
-      errorsCopy.firstName = "";
-    } else {
-      errorsCopy.firstName = "First name is required";
-      valid = false;
-    }
-
-    if (lastName.trim()) {
-      errorsCopy.lastName = "";
-    } else {
-      errorsCopy.lastName = "Last name is required";
-      valid = false;
-    }
-
-    if (email.trim()) {
-      errorsCopy.email = "";
-    } else {
-      errorsCopy.email = "Email is required";
-      valid = false;
-    }
-
-    setErrors(errorsCopy);
-
-    return valid;
-  };
-
+  // saveEmployee: フォーム送信時に呼ばれる関数
+  // - e.preventDefault() でページリロードを防ぐ
+  // - validate() を使って必須チェックを行い、問題なければ API 呼び出しを行う
   const saveEmployee = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (validateForm()) {
+    if (
+      validate({
+        firstName,
+        lastName,
+        email,
+      })
+    ) {
+      // バリデーション通過後の処理
       const newEmployee: EmployeeDto = {
         firstName: firstName,
         lastName: lastName,
         email: email,
       };
+      // サービス層へ新規作成リクエスト
       createEmployee(newEmployee);
+      // 成功後は一覧へ遷移
       navigate("/employees");
     }
   };
@@ -72,52 +56,35 @@ function CreateEmployeePage() {
             <div className="card-body">
               <form>
                 <div className="form-group mb-2">
-                  <label className="form-label">First Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter Employee First Name"
+                  <FormInput
+                    label="First Name"
                     name="firstName"
                     value={firstName}
-                    className={`form-control ${
-                      errors.firstName ? "is-invalid" : ""
-                    }`}
+                    placeholder="Enter Employee First Name"
                     onChange={(e) => setFirstName(e.target.value)}
+                    error={errors.firstName}
                   />
-                  {errors.firstName && (
-                    <div className="invalid-feedback">{errors.firstName}</div>
-                  )}
                 </div>
                 <div className="form-group mb-2">
-                  <label className="form-label">Last Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter Employee Last Name"
+                  <FormInput
+                    label="Last Name"
                     name="lastName"
                     value={lastName}
-                    className={`form-control ${
-                      errors.lastName ? "is-invalid" : ""
-                    }`}
+                    placeholder="Enter Employee Last Name"
                     onChange={(e) => setLastName(e.target.value)}
+                    error={errors.lastName}
                   />
-                  {errors.lastName && (
-                    <div className="invalid-feedback">{errors.lastName}</div>
-                  )}
                 </div>
                 <div className="form-group mb-2">
-                  <label className="form-label">Email</label>
-                  <input
-                    type="email"
-                    placeholder="Enter Employee Email"
+                  <FormInput
+                    label="Email"
                     name="email"
+                    type="email"
                     value={email}
-                    className={`form-control ${
-                      errors.email ? "is-invalid" : ""
-                    }`}
+                    placeholder="Enter Employee Email"
                     onChange={(e) => setEmail(e.target.value)}
+                    error={errors.email}
                   />
-                  {errors.email && (
-                    <div className="invalid-feedback">{errors.email}</div>
-                  )}
                 </div>
                 <button
                   type="submit"

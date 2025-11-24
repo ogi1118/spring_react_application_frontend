@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FormInput } from "../components/FormInput";
 import { registerUser } from "../service/AuthService";
 import { type RegisterDto } from "../service/types/RegisterDto";
+import useFormValidation from "../hooks/useFormValidation";
 
 export const Register = () => {
   const [name, setName] = useState<string>("");
@@ -11,8 +12,17 @@ export const Register = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { errors, validate } = useFormValidation({
+    name: "Name",
+    email: "Email",
+    password: "Password",
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // client-side validation: 必須チェック
+    // validate() は errors を更新するので、失敗時はフォームに赤いエラーが表示されます
+    if (!validate({ name, email, password })) return;
     setLoading(true);
     setMessage(null);
     setError(null);
@@ -67,6 +77,7 @@ export const Register = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
+                  error={errors.name}
                 />
                 <FormInput
                   label="Email"
@@ -76,6 +87,7 @@ export const Register = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  error={errors.email}
                 />
                 <FormInput
                   label="Password"
@@ -85,6 +97,7 @@ export const Register = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  error={errors.password}
                 />
                 <div className="text-center">
                   <button
