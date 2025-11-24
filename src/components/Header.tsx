@@ -1,10 +1,34 @@
+import { NavLink } from "react-router-dom";
+
 export const Header = () => {
   return (
-    <header>
-      <nav className="navbar navbar-dark bg-dark">
-        <a className="navbar-brand">Employee Management System</a>
-      </nav>
-    </header>
+    <div>
+      <header>
+        <nav className="navbar navbar-expand navbar-dark bg-dark">
+          <div>
+            <a className="navbar-brand" href="http://localhost:3000">
+              Employee Management System
+            </a>
+          </div>
+          <div className="collapse navbar-collapse">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <NavLink to="/register" className="nav-link">
+                  Register
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <NavLink to="/register" className="nav-link">
+                Register
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+      </header>
+    </div>
   );
 };
 

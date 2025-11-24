@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CreateEmployeePage from "./pages/CreateEmployee";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
             path="/create-employee"
             element={<CreateEmployeePage />}
           ></Route>
+
+          <Route path="/register" element={<Register />}></Route>
         </Routes>
         <Footer />
       </BrowserRouter>
